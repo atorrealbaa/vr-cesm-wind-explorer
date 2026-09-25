@@ -3,7 +3,7 @@ const CONFIG = {
 		center: [58.0, -95.0],
 		zoom: 4,
 		maxZoom: 7,
-		minZoom: 3,
+		minZoom: 5,
 
 		// zoomanimation turned off (createOneMap() in js/app.js)
 		zoomSnap: 0.125,
