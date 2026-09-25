@@ -145,7 +145,23 @@ html, body {
 }
 
 #period-label-left { left: 12px; }
-#period-label-right { right: 12px; }
+#period-label-right {
+	right: 12px;
+	pointer-events: auto;
+}
+
+#rcp85-link {
+	color: inherit;
+	text-decoration: underline;
+	text-decoration-style: dotted;
+	text-underline-offset: 2px;
+	cursor: pointer;
+}
+
+#rcp85-link:hover,
+#rcp85-link:focus-visible {
+	color: #2563eb;
+}
 
 /* move zoom in and out buttons below the title header */
 .leaflet-control-zoom {
@@ -198,6 +214,84 @@ html, body {
 	font-size: 0.92em;
 	letter-spacing: 0.02em;
 	color: #444;
+}
+
+/* collapsible panel headers (legend/layer panel & temporal mean panel) */
+.panel-header-row {
+	display: flex;
+	align-items: center;
+	gap: 0.5em;
+}
+
+.panel-header-row-left {
+	justify-content: flex-start;
+}
+
+.panel-header-row-spread {
+	justify-content: space-between;
+}
+
+.panel-title-inline {
+	margin-bottom: 0;
+}
+
+.panel-minimize-control {
+	display: flex;
+	align-items: center;
+	gap: 0.5em;
+}
+
+.panel-minimize-label {
+	font-weight: 700;
+	font-size: 0.92em;
+	letter-spacing: 0.02em;
+	color: #444;
+	white-space: nowrap;
+}
+
+.panel-collapse-btn {
+	flex-shrink: 0;
+	width: 1.7em;
+	height: 1.7em;
+	line-height: 1;
+	border: 1px solid #bbb;
+	background: #f4f4f4;
+	border-radius: 0.4em;
+	cursor: pointer;
+	font-size: 0.95em;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: #333;
+	transition: transform 0.15s ease;
+}
+
+.panel-collapse-btn:hover {
+	background: #e6e6e6;
+}
+
+#layer-panel-body,
+#season-panel-body {
+	margin-top: 0.77em;
+	overflow: hidden;
+}
+
+.control-panel.collapsed .panel-collapse-btn {
+	transform: rotate(-90deg);
+}
+
+#layer-panel.collapsed #layer-panel-body,
+#season-panel.collapsed #season-panel-body {
+	display: none;
+}
+
+.control-panel.collapsed {
+	max-width: none;
+	width: auto;
+}
+
+#season-panel.collapsed .panel-title-inline {
+	display: none;
 }
 
 .panel-note:not(:empty) {
@@ -263,6 +357,14 @@ html, body {
 }
 
 #layer-select {
+	width: 100%;
+	padding: 0.38em;
+	font-size: 1em;
+	border-radius: 0.4em;
+	border: 1px solid #bbb;
+}
+
+#speed-height-select {
 	width: 100%;
 	padding: 0.38em;
 	font-size: 1em;
@@ -424,6 +526,7 @@ html, body {
 
 /* info icons for speed, shear */
 .info-icon {
+	position: relative;
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
@@ -442,6 +545,37 @@ html, body {
 .info-icon:hover,
 .info-icon:focus {
 	background: #d1d5db;
+}
+
+.info-icon::after {
+	content: attr(data-tooltip);
+	position: absolute;
+	bottom: calc(100% + 8px);
+	left: 50%;
+	transform: translateX(-50%);
+	width: max-content;
+	max-width: 210px;
+	background: #1a1a1a;
+	color: #fff;
+	font-size: 12px;
+	line-height: 1.4;
+	font-weight: 400;
+	padding: 0.55em 0.7em;
+	border-radius: 0.4em;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+	opacity: 0;
+	visibility: hidden;
+	pointer-events: none;
+	transition: opacity 0.12s ease;
+	z-index: 1300;
+	white-space: normal;
+}
+
+.info-icon:hover::after,
+.info-icon:focus::after,
+.info-icon:focus-visible::after {
+	opacity: 1;
+	visibility: visible;
 }
 
 .turbine-cluster-icon {
@@ -488,6 +622,12 @@ html, body {
 		padding: 0.6em 0.7em;
 	}
 
+	.control-panel.collapsed {
+		left: auto;
+		max-height: none;
+		overflow: visible;
+	}
+
 	.button-row {
 		flex-direction: column;
 	}
@@ -501,4 +641,8 @@ html, body {
 
 	#period-label-left { left: 8px; }
 	#period-label-right { right: 8px; }
+
+	.info-icon::after {
+		max-width: 150px;
+	}
 }
