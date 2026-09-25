@@ -3,7 +3,7 @@
 <head>
 	<meta charset="UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<title>VR-CESM Wind Resource Explorer</title>
+	<title>VR-CESM Wind Explorer</title>
 
 	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
 		integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
@@ -100,24 +100,41 @@
 			aria-valuemin="4" aria-valuemax="96" aria-valuenow="50"></div>
 	</div>
 	<div id="period-label-left" class="period-label">Historical (1990&ndash;2020)</div>
-	<div id="period-label-right" class="period-label">Future (2080-2110) [RCP8.5]</div>
+	<div id="period-label-right" class="period-label">Future (2080-2110) [<a id="rcp85-link" href="https://climate-scenarios.canada.ca/?page=scen-rcp#:~:text=RCP8.5%20represents%20a%20rise%20in%20radiative%20forcing%20to%208.5%20W/m2%20in%202100." target="_blank" rel="noopener">RCP8.5</a>]</div>
 
 	<input type="file" id="add-layer-file-input" accept=".zip,.kmz" class="hidden" />
 
 	<!-- temporal mean selector -->
 	<div id="season-panel" class="control-panel bottom-left">
-		<div class="panel-title">Temporal Mean</div>
-		<div id="season-buttons" class="button-row">
-			<button class="season-btn active" data-season="ANNUAL" aria-pressed="true">Annual</button>
-			<button class="season-btn" data-season="DJF" aria-pressed="false">Winter</button>
-			<button class="season-btn" data-season="MAM" aria-pressed="false">Spring</button>
-			<button class="season-btn" data-season="JJA" aria-pressed="false">Summer</button>
-			<button class="season-btn" data-season="SON" aria-pressed="false">Fall</button>
+		<div class="panel-header-row panel-header-row-spread">
+			<div class="panel-title panel-title-inline">Temporal Mean</div>
+			<div class="panel-minimize-control">
+				<span class="panel-minimize-label" id="season-panel-collapse-label">Minimize temporal selection</span>
+				<button id="season-panel-collapse-btn" class="panel-collapse-btn" type="button"
+					aria-expanded="true" aria-controls="season-panel-body"
+					aria-label="Minimize temporal selection" title="Minimize temporal selection">&#9662;</button>
+			</div>
 		</div>
-		<div id="season-note" class="panel-note"></div>
+		<div id="season-panel-body">
+			<div id="season-buttons" class="button-row">
+				<button class="season-btn active" data-season="ANNUAL" aria-pressed="true">Annual</button>
+				<button class="season-btn" data-season="DJF" aria-pressed="false">Winter</button>
+				<button class="season-btn" data-season="MAM" aria-pressed="false">Spring</button>
+				<button class="season-btn" data-season="JJA" aria-pressed="false">Summer</button>
+				<button class="season-btn" data-season="SON" aria-pressed="false">Fall</button>
+			</div>
+			<div id="season-note" class="panel-note"></div>
+		</div>
 	</div>
 
 	<div id="layer-panel" class="control-panel bottom-right">
+		<div class="panel-header-row panel-header-row-left">
+			<span class="panel-minimize-label" id="layer-panel-collapse-label">Minimize layer controls</span>
+			<button id="layer-panel-collapse-btn" class="panel-collapse-btn" type="button"
+				aria-expanded="true" aria-controls="layer-panel-body"
+				aria-label="Minimize layer controls" title="Minimize layer controls">&#9662;</button>
+		</div>
+		<div id="layer-panel-body">
 		<div class="panel-row">
 			<div class="switch-label">
 				<span>Canadian Wind Turbine Database</span>
@@ -138,12 +155,12 @@
 				Wind speed height
 				<span class="info-icon" tabindex="0" role="img"
 					aria-label="Z1 and Z2 are direct vertical model outputs; however winds at ZHUB are interpolated based on Z1 and Z2 using the power-law equation and internally calculated shear values"
-					title="Z1 and Z2 are direct vertical model outputs; however winds at ZHUB are interpolated based on Z1 and Z2 using the power-law equation and internally calculated shear values">&#9432;</span>
+					data-tooltip="Z1 and Z2 are direct vertical model outputs; however winds at ZHUB are interpolated based on Z1 and Z2 using the power-law equation and internally calculated shear values">&#9432;</span>
 			</label>
 			<select id="speed-height-select">
-				<option value="Z1">Z1 (992.6 hPa, ~59.8 m AGL)</option>
-				<option value="ZHUB">ZHUB (interpolated, ~126.4 m AGL)</option>
-				<option value="Z2" selected>Z2 (976.3 hPa, ~192.9 m AGL)</option>
+				<option value="Z1">Z1</option>
+				<option value="ZHUB">ZHUB</option>
+				<option value="Z2" selected>Z2</option>
 			</select>
 			<div id="speed-height-detail-note" class="panel-note detail-note"></div>
 		</div>
@@ -154,7 +171,7 @@
 					Wind shear
 					<span class="info-icon" tabindex="0" role="img"
 						aria-label="Wind shear (alpha), which describes the change in wind speed with height, is always calculated between the vertical profile of Z1 (~59.8 m AGL) and Z2 (~192.9 m AGL). Wind shear affects turbines primarily across the blades swept area, so these data would be most accurate for turbines with rortor sweep within the range of Z1 and Z2"
-						title="Wind shear (α), which describes the change in wind speed with height, is always calculated between the vertical profile of Z1 (~59.8 m AGL) and Z2 (~192.9 m AGL). Wind shear affects turbines primarily across the blades swept area, so these data would be most accurate for turbines with rortor sweep within the range of Z1 and Z2">&#9432;</span>
+						data-tooltip="Wind shear (α), which describes the change in wind speed with height, is always calculated between the vertical profile of Z1 (~59.8 m AGL) and Z2 (~192.9 m AGL). Wind shear affects turbines primarily across the blades swept area, so these data would be most accurate for turbines with rortor sweep within the range of Z1 and Z2">&#9432;</span>
 				</span>
 				<label class="switch">
 					<input type="checkbox" id="shear-toggle" checked aria-label="Toggle wind shear compliance overlay" />
@@ -181,6 +198,7 @@
 		</div>
 
 		<div id="layer-note" class="panel-note"></div>
+		</div>
 	</div>
 
 	<div id="loading-indicator" class="hidden">Loading&hellip;</div>
