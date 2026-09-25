@@ -37,6 +37,12 @@
 	const disclaimerOverlayEl = document.getElementById('disclaimer-overlay');
 	const disclaimerDismissBtnEl = document.getElementById('disclaimer-dismiss-btn');
 	const disclaimerDontShowAgainEl = document.getElementById('disclaimer-dont-show-again');
+	const layerPanelEl = document.getElementById('layer-panel');
+	const layerPanelCollapseBtnEl = document.getElementById('layer-panel-collapse-btn');
+	const layerPanelCollapseLabelEl = document.getElementById('layer-panel-collapse-label');
+	const seasonPanelEl = document.getElementById('season-panel');
+	const seasonPanelCollapseBtnEl = document.getElementById('season-panel-collapse-btn');
+	const seasonPanelCollapseLabelEl = document.getElementById('season-panel-collapse-label');
 
 	const state = {
 		season: 'ANNUAL',
@@ -88,6 +94,33 @@
 			} catch (err) {
 			}
 		}
+	});
+
+	// collapsible panel addition
+	function setLayerPanelCollapsed(collapsed) {
+		layerPanelEl.classList.toggle('collapsed', collapsed);
+		layerPanelCollapseBtnEl.setAttribute('aria-expanded', String(!collapsed));
+		const label = collapsed ? 'Expand layer controls' : 'Minimize layer controls';
+		layerPanelCollapseBtnEl.setAttribute('aria-label', label);
+		layerPanelCollapseBtnEl.title = label;
+		layerPanelCollapseLabelEl.textContent = label;
+	}
+
+	function setSeasonPanelCollapsed(collapsed) {
+		seasonPanelEl.classList.toggle('collapsed', collapsed);
+		seasonPanelCollapseBtnEl.setAttribute('aria-expanded', String(!collapsed));
+		const label = collapsed ? 'Expand temporal selection' : 'Minimize temporal selection';
+		seasonPanelCollapseBtnEl.setAttribute('aria-label', label);
+		seasonPanelCollapseBtnEl.title = label;
+		seasonPanelCollapseLabelEl.textContent = label;
+	}
+
+	layerPanelCollapseBtnEl.addEventListener('click', () => {
+		setLayerPanelCollapsed(!layerPanelEl.classList.contains('collapsed'));
+	});
+
+	seasonPanelCollapseBtnEl.addEventListener('click', () => {
+		setSeasonPanelCollapsed(!seasonPanelEl.classList.contains('collapsed'));
 	});
 
 	function currentStyleFn(feature) {
@@ -603,7 +636,6 @@
 	});
 
 	// add own data button
-
 	async function handleAddLayerFile(event) {
 		const file = event.target.files && event.target.files[0];
 		event.target.value = '';
@@ -718,6 +750,8 @@
 	updateLegend();
 	applyDividerPosition(state.dividerPercent);
 	showDisclaimerIfNeeded();
+	setLayerPanelCollapsed(false);
+	setSeasonPanelCollapsed(false);
 
 	let canadaMaskFeaturePromise = null;
 
